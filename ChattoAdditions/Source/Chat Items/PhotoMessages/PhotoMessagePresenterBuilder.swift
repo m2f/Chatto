@@ -25,6 +25,26 @@
 import Foundation
 import Chatto
 
+public enum TransferDirection {
+    case upload
+    case download
+}
+
+public enum TransferStatus {
+    case idle
+    case transfering
+    case failed
+    case success
+}
+
+public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
+    var transferDirection: Observable<TransferDirection> { get set }
+    var transferProgress: Observable<Double> { get  set } // in [0,1]
+    var transferStatus: Observable<TransferStatus> { get set }
+    var image: Observable<UIImage?> { get set }
+    var imageSize: CGSize { get }
+}
+
 open class PhotoMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>: ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,
     ViewModelBuilderT.ViewModelT: PhotoMessageViewModelProtocol,

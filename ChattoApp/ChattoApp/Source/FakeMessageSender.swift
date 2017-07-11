@@ -26,57 +26,60 @@ import Foundation
 import Chatto
 import ChattoAdditions
 
-public protocol DemoMessageModelProtocol: MessageModelProtocol {
-    var status: MessageStatus { get set }
+public enum MessageStatus: Int32 {
+    case PENDING = 0
+    case ACKNOWLEDGED = 1
+    case DELIVERED = 2
+    case READ = 3
 }
 
 public class FakeMessageSender {
 
-    public var onMessageChanged: ((_ message: DemoMessageModelProtocol) -> Void)?
+    public var onMessageChanged: ((_ message: Message) -> Void)?
 
-    public func sendMessages(_ messages: [DemoMessageModelProtocol]) {
+    public func sendMessages(_ messages: [Message]) {
         for message in messages {
             self.fakeMessageStatus(message)
         }
     }
 
-    public func sendMessage(_ message: DemoMessageModelProtocol) {
+    public func sendMessage(_ message: Message) {
         self.fakeMessageStatus(message)
     }
 
-    private func fakeMessageStatus(_ message: DemoMessageModelProtocol) {
-        switch message.status {
-        case .success:
-            break
-        case .failed:
-            self.updateMessage(message, status: .sending)
-            self.fakeMessageStatus(message)
-        case .sending:
-            switch arc4random_uniform(100) % 5 {
-            case 0:
-                if arc4random_uniform(100) % 2 == 0 {
-                    self.updateMessage(message, status: .failed)
-                } else {
-                    self.updateMessage(message, status: .success)
-                }
-            default:
-                let delaySeconds: Double = Double(arc4random_uniform(1200)) / 1000.0
-                let delayTime = DispatchTime.now() + Double(Int64(delaySeconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-                DispatchQueue.main.asyncAfter(deadline: delayTime) {
-                    self.fakeMessageStatus(message)
-                }
-            }
-        }
+    private func fakeMessageStatus(_ message: Message) {
+//        switch message.status {
+//        case MessageStatus:
+//            break
+//        case .failed:
+//            self.updateMessage(message, status: .sending)
+//            self.fakeMessageStatus(message)
+//        case .sending:
+//            switch arc4random_uniform(100) % 5 {
+//            case 0:
+//                if arc4random_uniform(100) % 2 == 0 {
+//                    self.updateMessage(message, status: .failed)
+//                } else {
+//                    self.updateMessage(message, status: .success)
+//                }
+//            default:
+//                let delaySeconds: Double = Double(arc4random_uniform(1200)) / 1000.0
+//                let delayTime = DispatchTime.now() + Double(Int64(delaySeconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+//                DispatchQueue.main.asyncAfter(deadline: delayTime) {
+//                    self.fakeMessageStatus(message)
+//                }
+//            }
+//        }
     }
 
-    private func updateMessage(_ message: DemoMessageModelProtocol, status: MessageStatus) {
+    private func updateMessage(_ message: Message, status: Int32) {
         if message.status != status {
             message.status = status
             self.notifyMessageChanged(message)
         }
     }
 
-    private func notifyMessageChanged(_ message: DemoMessageModelProtocol) {
+    private func notifyMessageChanged(_ message: Message) {
         self.onMessageChanged?(message)
     }
 }

@@ -33,24 +33,16 @@ extension Array {
     }
 }
 
-func createTextMessageModel(_ uid: String, text: String, isIncoming: Bool) -> DemoTextMessageModel {
-    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: TextMessageModel<MessageModel>.chatItemType)
-    let textMessageModel = DemoTextMessageModel(messageModel: messageModel, text: text)
-    return textMessageModel
-}
-
-func createMessageModel(_ uid: String, isIncoming: Bool, type: String) -> MessageModel {
+func createMessageModel(_ uid: String, type: ChatItemType, text: String, isIncoming: Bool) -> Message {
     let senderId = isIncoming ? "1" : "2"
-    let messageStatus = isIncoming || arc4random_uniform(100) % 3 == 0 ? MessageStatus.success : .failed
-    let messageModel = MessageModel(uid: uid, senderId: senderId, type: type, isIncoming: isIncoming, date: Date(), status: messageStatus)
+    let messageModel = Message(msgId: uid, msgType: type, senderId: senderId, isIncoming: isIncoming, date: Date(), status: MessageStatus.PENDING.rawValue, msgText: text)
+    
+    if type != "text" {
+        messageModel.image = UIImage(named: text)
+    }
     return messageModel
 }
 
-func createPhotoMessageModel(_ uid: String, image: UIImage, size: CGSize, isIncoming: Bool) -> DemoPhotoMessageModel {
-    let messageModel = createMessageModel(uid, isIncoming: isIncoming, type: PhotoMessageModel<MessageModel>.chatItemType)
-    let photoMessageModel = DemoPhotoMessageModel(messageModel: messageModel, imageSize:size, image: image)
-    return photoMessageModel
-}
 
 class FakeMessageFactory {
     static let demoTexts = [
@@ -63,34 +55,23 @@ class FakeMessageFactory {
     }
 
     class func createChatItem(_ uid: String, isIncoming: Bool) -> MessageModelProtocol {
-        if arc4random_uniform(100) % 2 == 0 {
-            return self.createTextMessageModel(uid, isIncoming: isIncoming)
-        } else {
-            return self.createPhotoMessageModel(uid, isIncoming: isIncoming)
-        }
+        return self.createTextMessageModel(uid, isIncoming: isIncoming)
+//        if arc4random_uniform(100) % 2 == 0 {
+//            return self.createTextMessageModel(uid, isIncoming: isIncoming)
+//        } else {
+//            return self.createPhotoMessageModel(uid, isIncoming: isIncoming)
+//        }
     }
 
-    class func createTextMessageModel(_ uid: String, isIncoming: Bool) -> DemoTextMessageModel {
+    class func createTextMessageModel(_ uid: String, isIncoming: Bool) -> Message {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
         let text = "\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
-        return ChattoApp.createTextMessageModel(uid, text: text, isIncoming: isIncoming)
+        return ChattoApp.createMessageModel(uid, type: "text", text: text, isIncoming: isIncoming)
     }
 
-    class func createPhotoMessageModel(_ uid: String, isIncoming: Bool) -> DemoPhotoMessageModel {
-        var imageSize = CGSize.zero
-        switch arc4random_uniform(100) % 3 {
-        case 0:
-            imageSize = CGSize(width: 400, height: 300)
-        case 1:
-            imageSize = CGSize(width: 300, height: 400)
-        case 2:
-            fallthrough
-        default:
-            imageSize = CGSize(width: 300, height: 300)
-        }
-
+    class func createPhotoMessageModel(_ uid: String, isIncoming: Bool) -> Message {
         var imageName: String
         switch arc4random_uniform(100) % 3 {
         case 0:
@@ -102,19 +83,7 @@ class FakeMessageFactory {
         default:
             imageName = "pic-test-3"
         }
-        return ChattoApp.createPhotoMessageModel(uid, image: UIImage(named: imageName)!, size: imageSize, isIncoming: isIncoming)
-    }
-}
-
-extension TextMessageModel {
-    static var chatItemType: ChatItemType {
-        return "text"
-    }
-}
-
-extension PhotoMessageModel {
-    static var chatItemType: ChatItemType {
-        return "photo"
+        return ChattoApp.createMessageModel(uid, type: "image", text: imageName, isIncoming: isIncoming)
     }
 }
 
@@ -141,13 +110,7 @@ class TutorialMessageFactory {
             let type = message.0
             let content = message.1
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
-
-            if type == "text" {
-                result.append(createTextMessageModel("tutorial-\(index)", text: content, isIncoming: isIncoming))
-            } else {
-                let image = UIImage(named: content)!
-                result.append(createPhotoMessageModel("tutorial-\(index)", image:image, size: image.size, isIncoming: isIncoming))
-            }
+            result.append(createMessageModel("tutorial-\(index)", type: type, text: content, isIncoming: isIncoming))
         }
         return result
     }

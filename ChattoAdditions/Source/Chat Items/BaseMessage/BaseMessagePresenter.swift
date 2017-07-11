@@ -25,6 +25,13 @@
 import Foundation
 import Chatto
 
+public protocol MessageModelProtocol: ChatItemProtocol {
+    var senderId: String { get }
+    var isIncoming: Bool { get }
+    var date: Date { get }
+    var status: Int32 { get }
+}
+
 public protocol ViewModelBuilderProtocol {
     associatedtype ModelT: MessageModelProtocol
     associatedtype ViewModelT: MessageViewModelProtocol
@@ -34,7 +41,6 @@ public protocol ViewModelBuilderProtocol {
 
 public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
-    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView)
     func userDidTapOnAvatar(viewModel: ViewModelT)
     func userDidTapOnBubble(viewModel: ViewModelT)
     func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
@@ -117,10 +123,6 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
                 guard let sSelf = self else { return }
                 sSelf.onCellAvatarTapped()
             }
-            cell.onFailedButtonTapped = { [weak self] (cell) in
-                guard let sSelf = self else { return }
-                sSelf.onCellFailedButtonTapped(cell.failedButton)
-            }
             additionalConfiguration?()
         }, animated: animated, completion: nil)
     }
@@ -189,9 +191,5 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
 
     open func onCellAvatarTapped() {
         self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
-    }
-
-    open func onCellFailedButtonTapped(_ failedButtonView: UIView) {
-        self.interactionHandler?.userDidTapOnFailIcon(viewModel: self.messageViewModel, failIconView: failedButtonView)
     }
 }

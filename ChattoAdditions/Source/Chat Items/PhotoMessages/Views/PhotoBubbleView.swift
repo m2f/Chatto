@@ -68,7 +68,9 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         imageView.addSubview(self.borderView)
         return imageView
     }()
-
+    
+    private lazy var timeAndSatusLabel: UILabel = UILabel()
+    
     private lazy var borderView = UIImageView()
 
     private lazy var overlayView: UIView = {

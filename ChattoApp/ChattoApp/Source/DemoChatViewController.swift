@@ -38,7 +38,7 @@ class DemoChatViewController: BaseChatViewController {
     lazy private var baseMessageHandler: BaseMessageHandler = {
         return BaseMessageHandler(messageSender: self.messageSender)
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let image = UIImage(named: "bubble-incoming-tail-border", in: Bundle(for: DemoChatViewController.self), compatibleWith: nil)?.bma_tintWithColor(.blue)
@@ -64,7 +64,7 @@ class DemoChatViewController: BaseChatViewController {
     }
 
     override func createPresenterBuilders() -> [ChatItemType: [ChatItemPresenterBuilderProtocol]] {
-
+        
         let textMessagePresenter = TextMessagePresenterBuilder(
             viewModelBuilder: DemoTextMessageViewModelBuilder(),
             interactionHandler: DemoTextMessageHandler(baseHandler: self.baseMessageHandler)
@@ -78,13 +78,8 @@ class DemoChatViewController: BaseChatViewController {
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         return [
-            DemoTextMessageModel.chatItemType: [
-                textMessagePresenter
-            ],
-            DemoPhotoMessageModel.chatItemType: [
-                photoMessagePresenter
-            ],
-            SendingStatusModel.chatItemType: [SendingStatusPresenterBuilder()],
+            "text": [ textMessagePresenter ],
+            "photo": [ photoMessagePresenter ],
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
         ]
     }

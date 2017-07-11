@@ -25,6 +25,10 @@
 import Foundation
 import Chatto
 
+public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
+    var text: String { get }
+}
+
 open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
 : ChatItemPresenterBuilderProtocol where
     ViewModelBuilderT: ViewModelBuilderProtocol,

@@ -31,6 +31,8 @@ public protocol TextBubbleViewStyleProtocol {
     func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
     func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
     func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets
+    func timeAndStatusFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont
+    func timeAndStatusColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor
 }
 
 public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSizingQueryable {
@@ -82,6 +84,7 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
     private func commonInit() {
         self.addSubview(self.bubbleImageView)
         self.addSubview(self.textView)
+        self.textView.addSubview(timeAndSatusLabel)
     }
 
     private lazy var bubbleImageView: UIImageView = {
@@ -110,7 +113,9 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
-
+    
+    private var timeAndSatusLabel = UILabel()
+    
     public private(set) var isUpdating: Bool = false
     public func performBatchUpdates(_ updateClosure: @escaping () -> Void, animated: Bool, completion: (() -> Void)?) {
         self.isUpdating = true
@@ -137,6 +142,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         guard let style = self.style else { return }
 
         self.updateTextView()
+        self.updateTimestamp()
+
         let bubbleImage = style.bubbleImage(viewModel: self.textMessageViewModel, isSelected: self.selected)
         let borderImage = style.bubbleImageBorder(viewModel: self.textMessageViewModel, isSelected: self.selected)
         if self.bubbleImageView.image != bubbleImage { self.bubbleImageView.image = bubbleImage }
@@ -168,9 +175,39 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         if needsToUpdateText || self.textView.text != viewModel.text {
             self.textView.text = viewModel.text
         }
-
+        
         let textInsets = style.textInsets(viewModel: viewModel, isSelected: self.selected)
         if self.textView.textContainerInset != textInsets { self.textView.textContainerInset = textInsets }
+    }
+    
+    private func updateTimestamp() {
+        guard let style = self.style, let viewModel = self.textMessageViewModel else { return }
+        //style time and status label
+        let font = style.timeAndStatusFont(viewModel: viewModel, isSelected: self.selected)
+        let textColor = style.timeAndStatusColor(viewModel: viewModel, isSelected: self.selected)
+
+        if self.timeAndSatusLabel.font != font {
+            self.timeAndSatusLabel.font = font
+        }
+        
+        if self.timeAndSatusLabel.textColor != textColor {
+            self.timeAndSatusLabel.textColor = textColor
+        }
+
+        if viewModel.isIncoming {
+            timeAndSatusLabel.text = viewModel.date
+            return
+        }
+        if let image = viewModel.statusImage {
+            let timeAndStatus = NSMutableAttributedString(string: "\(viewModel.date) ")
+            let attachment = NSTextAttachment()
+            attachment.image = image
+            attachment.setImageHeight(font: timeAndSatusLabel.font)
+            timeAndStatus.append(NSAttributedString(attachment: attachment))
+            timeAndSatusLabel.attributedText = timeAndStatus
+        } else {
+            timeAndSatusLabel.text = viewModel.date
+        }
     }
 
     private func bubbleImage() -> UIImage {
@@ -188,12 +225,14 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         self.textView.bma_rect = layout.textFrame
         self.bubbleImageView.bma_rect = layout.bubbleFrame
         self.borderImageView.bma_rect = self.bubbleImageView.bounds
+        self.timeAndSatusLabel.bma_rect = layout.timeAndStatusFrame
     }
 
     public var layoutCache: NSCache<AnyObject, AnyObject>!
     private func calculateTextBubbleLayout(preferredMaxLayoutWidth: CGFloat) -> TextBubbleLayoutModel {
         let layoutContext = TextBubbleLayoutModel.LayoutContext(
             text: self.textMessageViewModel.text,
+            isIncoming: self.textMessageViewModel.isIncoming,
             font: self.style.textFont(viewModel: self.textMessageViewModel, isSelected: self.selected),
             textInsets: self.style.textInsets(viewModel: self.textMessageViewModel, isSelected: self.selected),
             preferredMaxLayoutWidth: preferredMaxLayoutWidth
@@ -219,6 +258,7 @@ private final class TextBubbleLayoutModel {
     let layoutContext: LayoutContext
     var textFrame: CGRect = CGRect.zero
     var bubbleFrame: CGRect = CGRect.zero
+    var timeAndStatusFrame: CGRect = CGRect.zero
     var size: CGSize = CGSize.zero
 
     init(layoutContext: LayoutContext) {
@@ -227,6 +267,7 @@ private final class TextBubbleLayoutModel {
 
     struct LayoutContext: Equatable, Hashable {
         let text: String
+        let isIncoming: Bool
         let font: UIFont
         let textInsets: UIEdgeInsets
         let preferredMaxLayoutWidth: CGFloat
@@ -250,6 +291,11 @@ private final class TextBubbleLayoutModel {
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
         self.textFrame = self.bubbleFrame
         self.size = bubbleSize
+        let width: CGFloat = self.layoutContext.isIncoming ? 72 : 88
+        let xOffset = textFrame.width - (width + 8)
+        self.timeAndStatusFrame = CGRect(
+            x: xOffset, y: textFrame.height - 24,
+            width: width, height: 24)
     }
 
     private func textSizeThatFitsWidth(_ width: CGFloat) -> CGSize {
@@ -274,8 +320,9 @@ private final class TextBubbleLayoutModel {
 
     private func replicateUITextViewNSTextStorage() -> NSTextStorage {
         // See https://github.com/badoo/Chatto/issues/129
-        return NSTextStorage(string: self.layoutContext.text, attributes: [
-            NSFontAttributeName: self.layoutContext.font,
+        let extraText = self.layoutContext.isIncoming ? "03:63 PM" : "03:59 AM I"
+        return NSTextStorage(string: "\(self.layoutContext.text) \(extraText)",
+            attributes: [ NSFontAttributeName: self.layoutContext.font,
             "NSOriginalFont": self.layoutContext.font
         ])
     }

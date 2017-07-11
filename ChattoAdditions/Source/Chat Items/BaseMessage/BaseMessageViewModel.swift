@@ -24,31 +24,12 @@
 
 import Foundation
 
-public enum MessageViewModelStatus {
-    case success
-    case sending
-    case failed
-}
-
-public extension MessageStatus {
-    public func viewModelStatus() -> MessageViewModelStatus {
-        switch self {
-        case .success:
-            return MessageViewModelStatus.success
-        case .failed:
-            return MessageViewModelStatus.failed
-        case .sending:
-            return MessageViewModelStatus.sending
-        }
-    }
-}
-
 public protocol MessageViewModelProtocol: class { // why class? https://gist.github.com/diegosanchezr/29979d22c995b4180830
     var isIncoming: Bool { get }
     var showsTail: Bool { get set }
-    var showsFailedIcon: Bool { get }
     var date: String { get }
-    var status: MessageViewModelStatus { get }
+    var status: Int32 { get }
+    var statusImage: UIImage? { set get }
     var avatarImage: Observable<UIImage?> { set get }
     func willBeShown() // Optional
     func wasHidden() // Optional
@@ -79,12 +60,17 @@ extension DecoratedMessageViewModelProtocol {
         return self.messageViewModel.date
     }
 
-    public var status: MessageViewModelStatus {
+    public var status: Int32 {
         return self.messageViewModel.status
     }
-
-    public var showsFailedIcon: Bool {
-        return self.messageViewModel.showsFailedIcon
+    
+    public var statusImage: UIImage? {
+        get {
+            return self.messageViewModel.statusImage
+        }
+        set {
+            self.messageViewModel.statusImage = newValue
+        }
     }
 
     public var avatarImage: Observable<UIImage?> {
@@ -98,13 +84,16 @@ extension DecoratedMessageViewModelProtocol {
 }
 
 open class MessageViewModel: MessageViewModelProtocol {
+    
     open var isIncoming: Bool {
         return self.messageModel.isIncoming
     }
 
-    open var status: MessageViewModelStatus {
-        return self.messageModel.status.viewModelStatus()
+    open var status: Int32 {
+        return self.messageModel.status
     }
+    
+    public var statusImage: UIImage?
 
     open var showsTail: Bool
     open lazy var date: String = {
@@ -120,11 +109,7 @@ open class MessageViewModel: MessageViewModelProtocol {
         self.messageModel = messageModel
         self.avatarImage = Observable<UIImage?>(avatarImage)
     }
-
-    open var showsFailedIcon: Bool {
-        return self.status == .failed
-    }
-
+    
     public var avatarImage: Observable<UIImage?>
 }
 

@@ -207,3 +207,12 @@ public extension UIColor {
         return UIColor(red: r, green: g, blue: b, alpha: 1)
     }
 }
+
+extension NSTextAttachment {
+    public func setImageHeight(font: UIFont) {
+        guard let image = image else { return }
+        let ratio = image.size.width / image.size.height
+        bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: ratio * font.pointSize, height: font.pointSize)
+        print("bounds \(bounds) \(image.size.width) \(image.size.width) \(image.scale)")
+    }
+}

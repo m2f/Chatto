@@ -43,7 +43,6 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
 
             let bottomMargin = self.separationAfterItem(chatItem, next: next)
             var showsTail = false
-            var additionalItems =  [DecoratedChatItem]()
 
             var addTimeSeparator = false
             if let currentMessage = chatItem as? MessageModelProtocol {
@@ -59,14 +58,6 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                     addTimeSeparator = true
                 }
 
-                if self.showsStatusForMessage(currentMessage) {
-                    additionalItems.append(
-                        DecoratedChatItem(
-                            chatItem: SendingStatusModel(uid: "\(currentMessage.uid)-decoration-status", status: currentMessage.status),
-                            decorationAttributes: nil)
-                    )
-                }
-
                 if addTimeSeparator {
                     let dateTimeStamp = DecoratedChatItem(chatItem: TimeSeparatorModel(uid: "\(currentMessage.uid)-time-separator", date: currentMessage.date.toWeekDayAndDateString()), decorationAttributes: nil)
                     decoratedChatItems.append(dateTimeStamp)
@@ -77,7 +68,6 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                 chatItem: chatItem,
                 decorationAttributes: ChatItemDecorationAttributes(bottomMargin: bottomMargin, showsTail: showsTail, canShowAvatar: showsTail))
             )
-            decoratedChatItems.append(contentsOf: additionalItems)
         }
 
         return decoratedChatItems
@@ -88,18 +78,12 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
         guard let currentMessage = current as? MessageModelProtocol else { return Constants.normalSeparation }
         guard let nextMessage = nexItem as? MessageModelProtocol else { return Constants.normalSeparation }
 
-        if self.showsStatusForMessage(currentMessage) {
-            return 0
-        } else if currentMessage.senderId != nextMessage.senderId {
+        if currentMessage.senderId != nextMessage.senderId {
             return Constants.normalSeparation
         } else if nextMessage.date.timeIntervalSince(currentMessage.date) > Constants.timeIntervalThresholdToIncreaseSeparation {
             return Constants.normalSeparation
         } else {
             return Constants.shortSeparation
         }
-    }
-
-    func showsStatusForMessage(_ message: MessageModelProtocol) -> Bool {
-        return message.status == .failed || message.status == .sending
     }
 }

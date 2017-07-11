@@ -25,23 +25,37 @@
 import Foundation
 import ChattoAdditions
 
-class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
+class DemoPhotoMessageViewModel: PhotoMessageViewModelProtocol {
 
-    let fakeImage: UIImage
-    override init(photoMessage: DemoPhotoMessageModel, messageViewModel: MessageViewModelProtocol) {
-        self.fakeImage = photoMessage.image
-        super.init(photoMessage: photoMessage, messageViewModel: messageViewModel)
-        if photoMessage.isIncoming {
-            self.image.value = nil
-        }
+    let fakeImage: UIImage?
+    public var transferStatus: Observable<TransferStatus> = Observable(.idle)
+    public var transferProgress: Observable<Double> = Observable(0)
+    public var transferDirection: Observable<TransferDirection> = Observable(.download)
+    public var image: Observable<UIImage?>
+    public var imageSize: CGSize {
+        return message.image?.size ?? .zero
+    }
+    
+    public let messageViewModel: MessageViewModelProtocol
+    public let message: Message
+
+    init(message: Message, messageViewModel: MessageViewModelProtocol) {
+        self.fakeImage = UIImage(named: message.msgText)
+        self.message = message
+        self.messageViewModel = messageViewModel
+        self.image = Observable(message.image)
+//        if photoMessage.isIncoming {
+//            self.image.value = nil
+//        }
     }
 
-    override func willBeShown() {
+    func willBeShown() {
         self.fakeProgress()
     }
 
     func fakeProgress() {
-        if [TransferStatus.success, TransferStatus.failed].contains(self.transferStatus.value) {
+        if [TransferStatus.success, TransferStatus.failed]
+            .contains(self.transferStatus.value) {
             return
         }
         if self.transferProgress.value >= 1.0 {
@@ -65,24 +79,24 @@ class DemoPhotoMessageViewModel: PhotoMessageViewModel<DemoPhotoMessageModel> {
     }
 }
 
-extension DemoPhotoMessageViewModel: DemoMessageViewModelProtocol {
-    var messageModel: DemoMessageModelProtocol {
-        return self._photoMessage
-    }
-}
+//extension DemoPhotoMessageViewModel: DemoMessageViewModelProtocol {
+//    var messageModel: DemoMessageModelProtocol {
+//        return self.message
+//    }
+//}
 
 class DemoPhotoMessageViewModelBuilder: ViewModelBuilderProtocol {
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    func createViewModel(_ model: DemoPhotoMessageModel) -> DemoPhotoMessageViewModel {
+    func createViewModel(_ model: Message) -> DemoPhotoMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
-        let photoMessageViewModel = DemoPhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
+        let photoMessageViewModel = DemoPhotoMessageViewModel(message: model, messageViewModel: messageViewModel)
         photoMessageViewModel.avatarImage.value = UIImage(named: "userAvatar")
         return photoMessageViewModel
     }
 
     func canCreateViewModel(fromModel model: Any) -> Bool {
-        return model is DemoPhotoMessageModel
+        return model is Message
     }
 }

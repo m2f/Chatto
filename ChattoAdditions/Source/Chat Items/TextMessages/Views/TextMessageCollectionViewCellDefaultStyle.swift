@@ -46,15 +46,21 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
     }
 
     public struct TextStyle {
-        let font: () -> UIFont
-        let incomingColor: () -> UIColor
-        let outgoingColor: () -> UIColor
+        let font: UIFont
+        let incomingColor: UIColor
+        let outgoingColor: UIColor
         let incomingInsets: UIEdgeInsets
         let outgoingInsets: UIEdgeInsets
+        let timeAndStatusFont: UIFont
+        let timeAndStatusIncomingColor: UIColor
+        let timeAndStatusOutgoingColor: UIColor
         public init(
-            font: @autoclosure @escaping () -> UIFont,
-            incomingColor: @autoclosure @escaping () -> UIColor,
-            outgoingColor: @autoclosure @escaping () -> UIColor,
+            font: UIFont,
+            incomingColor: UIColor,
+            outgoingColor: UIColor,
+            timeAndStatusFont: UIFont,
+            timeAndStatusIncomingColor: UIColor,
+            timeAndStatusOutgoingColor: UIColor,
             incomingInsets: UIEdgeInsets,
             outgoingInsets: UIEdgeInsets) {
                 self.font = font
@@ -62,6 +68,9 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
                 self.outgoingColor = outgoingColor
                 self.incomingInsets = incomingInsets
                 self.outgoingInsets = outgoingInsets
+                self.timeAndStatusFont = timeAndStatusFont
+                self.timeAndStatusIncomingColor = timeAndStatusIncomingColor
+                self.timeAndStatusOutgoingColor = timeAndStatusOutgoingColor
         }
     }
 
@@ -86,71 +95,63 @@ open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewC
         ]
     }()
 
-    lazy var font: UIFont = self.textStyle.font()
-    lazy var incomingColor: UIColor = self.textStyle.incomingColor()
-    lazy var outgoingColor: UIColor = self.textStyle.outgoingColor()
-
     open func textFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
-        return self.font
+        return self.textStyle.font
     }
 
     open func textColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
-        return viewModel.isIncoming ? self.incomingColor : self.outgoingColor
+        return viewModel.isIncoming ? self.textStyle.incomingColor : self.textStyle.outgoingColor
     }
 
     open func textInsets(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIEdgeInsets {
         return viewModel.isIncoming ? self.textStyle.incomingInsets : self.textStyle.outgoingInsets
     }
 
+    open func timeAndStatusFont(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIFont {
+        return self.textStyle.timeAndStatusFont
+    }
+    
+    open func timeAndStatusColor(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIColor {
+        return viewModel.isIncoming ? self.textStyle.timeAndStatusIncomingColor : self.textStyle.timeAndStatusOutgoingColor
+    }
+    
     open func bubbleImageBorder(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage? {
         return self.baseStyle.borderImage(viewModel: viewModel)
     }
 
     open func bubbleImage(viewModel: TextMessageViewModelProtocol, isSelected: Bool) -> UIImage {
-        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected)
+        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail)
 
         if let image = self.images[key] {
             return image
         } else {
             let templateKey = ImageKey.template(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail)
             if let image = self.images[templateKey] {
-                let image = self.createImage(templateImage: image, isIncoming: viewModel.isIncoming, status: viewModel.status, isSelected: isSelected)
+                let image = self.createImage(templateImage: image, isIncoming: viewModel.isIncoming)
                 self.images[key] = image
                 return image
             }
         }
 
-        assert(false, "coulnd't find image for this status. ImageKey: \(key)")
+        assert(false, "coulnd't find image for ImageKey: \(key)")
         return UIImage()
     }
 
-    open func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
-        var color = isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
-
-        switch status {
-        case .success:
-            break
-        case .failed, .sending:
-            color = color.bma_blendWithColor(UIColor.white.withAlphaComponent(0.70))
-        }
-
-        if isSelected {
-            color = color.bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
-        }
-
+    open func createImage(templateImage image: UIImage, isIncoming: Bool) -> UIImage {
+        let color = isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
         return image.bma_tintWithColor(color)
     }
 
     private enum ImageKey: Hashable {
         case template(isIncoming: Bool, showsTail: Bool)
-        case normal(isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool)
+        case normal(isIncoming: Bool, showsTail: Bool)
 
         var hashValue: Int {
             switch self {
             case let .template(isIncoming: isIncoming, showsTail: showsTail):
                 return Chatto.bma_combine(hashes: [1 /*template*/, isIncoming.hashValue, showsTail.hashValue])
-            case let .normal(isIncoming: isIncoming, status: status, showsTail: showsTail, isSelected: isSelected):
-                return Chatto.bma_combine(hashes: [2 /*normal*/, isIncoming.hashValue, status.hashValue, showsTail.hashValue, isSelected.hashValue])
+            case let .normal(isIncoming: isIncoming, showsTail: showsTail):
+                return Chatto.bma_combine(hashes: [2 /*normal*/, isIncoming.hashValue,showsTail.hashValue])
             }
         }
 
@@ -183,6 +184,9 @@ public extension TextMessageCollectionViewCellDefaultStyle { // Default values
             font: UIFont.systemFont(ofSize: 16),
             incomingColor: UIColor.black,
             outgoingColor: UIColor.white,
+            timeAndStatusFont: UIFont.systemFont(ofSize: 14),
+            timeAndStatusIncomingColor: UIColor.gray,
+            timeAndStatusOutgoingColor: UIColor.white,
             incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
             outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19)
         )

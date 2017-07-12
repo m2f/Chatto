@@ -24,6 +24,7 @@
 
 import Foundation
 import UIKit
+import Chatto
 
 open class TimeSeparatorPresenterBuilder: ChatItemPresenterBuilderProtocol {
 
@@ -63,7 +64,7 @@ open class TimeSeparatorPresenter: ChatItemPresenterProtocol {
     
     public func configureCell(_ cell: UICollectionViewCell, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
         guard let timeSeparatorCell = cell as? TimeSeparatorCollectionViewCell else {
-            assert(false, "expecting status cell")
+            assert(false, "expecting time cell")
             return
         }
         

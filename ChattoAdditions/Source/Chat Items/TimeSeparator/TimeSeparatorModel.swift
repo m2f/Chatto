@@ -24,44 +24,33 @@
 
 import Foundation
 import UIKit
+import Chatto
 
-open class TimeSeparatorCollectionViewCell: UICollectionViewCell {
+open class TimeSeparatorModel: ChatItemProtocol {
+    public let msgId: String
+    public let msgType: Int32 = TimeSeparatorModel.chatItemType
+    let date: String
     
-    private let label: UILabel = UILabel()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.commonInit()
+    public static var chatItemType: ChatItemType {
+        return -1
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.commonInit()
+    public init(msgId: String, date: String) {
+        self.date = date
+        self.msgId = msgId
     }
+}
+
+public extension Date {
+    // Have a time stamp formatter to avoid keep creating new ones. This improves performance
+    private static let weekdayAndDateStampDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
+        dateFormatter.dateFormat = "EEEE, MMM dd yyyy" // "Monday, Mar 7 2016"
+        return dateFormatter
+    }()
     
-    private func commonInit() {
-        self.label.font = UIFont.systemFont(ofSize: 12)
-        self.label.textAlignment = .center
-        self.label.textColor = UIColor.gray
-        self.contentView.addSubview(label)
-    }
-    
-    var text: String = "" {
-        didSet {
-            if oldValue != text {
-                self.setTextOnLabel(text)
-            }
-        }
-    }
-    
-    private func setTextOnLabel(_ text: String) {
-        self.label.text = text
-        self.setNeedsLayout()
-    }
-    
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-        self.label.bounds.size = self.label.sizeThatFits(self.contentView.bounds.size)
-        self.label.center = self.contentView.center
+    func toWeekDayAndDateString() -> String {
+        return Date.weekdayAndDateStampDateFormatter.string(from: self)
     }
 }

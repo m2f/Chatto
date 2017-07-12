@@ -195,18 +195,18 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         }
 
         if viewModel.isIncoming {
-            timeAndSatusLabel.text = viewModel.date
+            timeAndSatusLabel.text = viewModel.messagedOn
             return
         }
         if let image = viewModel.statusImage {
-            let timeAndStatus = NSMutableAttributedString(string: "\(viewModel.date) ")
+            let timeAndStatus = NSMutableAttributedString(string: "\(viewModel.messagedOn) ")
             let attachment = NSTextAttachment()
             attachment.image = image
             attachment.setImageHeight(font: timeAndSatusLabel.font)
             timeAndStatus.append(NSAttributedString(attachment: attachment))
             timeAndSatusLabel.attributedText = timeAndStatus
         } else {
-            timeAndSatusLabel.text = viewModel.date
+            timeAndSatusLabel.text = viewModel.messagedOn
         }
     }
 

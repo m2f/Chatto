@@ -37,7 +37,7 @@ final class ChatItemPresenterFactory: ChatItemPresenterFactoryProtocol {
     }
 
     func createChatItemPresenter(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
-        for builder in self.presenterBuildersByType[chatItem.type] ?? [] {
+        for builder in self.presenterBuildersByType[chatItem.msgType] ?? [] {
             if builder.canHandleChatItem(chatItem) {
                 return builder.createPresenterWithChatItem(chatItem)
             }

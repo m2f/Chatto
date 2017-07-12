@@ -213,6 +213,5 @@ extension NSTextAttachment {
         guard let image = image else { return }
         let ratio = image.size.width / image.size.height
         bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: ratio * font.pointSize, height: font.pointSize)
-        print("bounds \(bounds) \(image.size.width) \(image.size.width) \(image.scale)")
     }
 }

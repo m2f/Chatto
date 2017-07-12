@@ -29,7 +29,7 @@ class ConversationsViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         var initialCount = 0
-        let pageSize = 50
+        let pageSize = 10
 
         var dataSource: FakeDataSource!
         if segue.identifier == "0 messages" {
@@ -37,7 +37,7 @@ class ConversationsViewController: UITableViewController {
         } else if segue.identifier == "2 messages" {
             initialCount = 2
         } else if segue.identifier == "10000 messages" {
-            initialCount = 10000
+            initialCount = 100
         } else if segue.identifier == "overview" {
             dataSource = FakeDataSource(messages: TutorialMessageFactory.createMessages(), pageSize: pageSize)
         } else {

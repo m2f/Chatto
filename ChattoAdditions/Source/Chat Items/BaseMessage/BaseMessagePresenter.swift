@@ -28,8 +28,8 @@ import Chatto
 public protocol MessageModelProtocol: ChatItemProtocol {
     var senderId: String { get }
     var isIncoming: Bool { get }
-    var date: Date { get }
-    var status: Int32 { get }
+    var messagedOn: Date { get }
+    //var status: Int32 { get }
 }
 
 public protocol ViewModelBuilderProtocol {

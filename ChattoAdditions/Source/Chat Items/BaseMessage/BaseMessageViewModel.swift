@@ -27,8 +27,7 @@ import Foundation
 public protocol MessageViewModelProtocol: class { // why class? https://gist.github.com/diegosanchezr/29979d22c995b4180830
     var isIncoming: Bool { get }
     var showsTail: Bool { get set }
-    var date: String { get }
-    var status: Int32 { get }
+    var messagedOn: String { get }
     var statusImage: UIImage? { set get }
     var avatarImage: Observable<UIImage?> { set get }
     func willBeShown() // Optional
@@ -56,12 +55,8 @@ extension DecoratedMessageViewModelProtocol {
             self.messageViewModel.showsTail = newValue
         }
     }
-    public var date: String {
-        return self.messageViewModel.date
-    }
-
-    public var status: Int32 {
-        return self.messageViewModel.status
+    public var messagedOn: String {
+        return self.messageViewModel.messagedOn
     }
     
     public var statusImage: UIImage? {
@@ -89,15 +84,11 @@ open class MessageViewModel: MessageViewModelProtocol {
         return self.messageModel.isIncoming
     }
 
-    open var status: Int32 {
-        return self.messageModel.status
-    }
-    
     public var statusImage: UIImage?
 
     open var showsTail: Bool
-    open lazy var date: String = {
-        return self.dateFormatter.string(from: self.messageModel.date as Date)
+    open lazy var messagedOn: String = {
+        return self.dateFormatter.string(from: self.messageModel.messagedOn as Date)
     }()
 
     public let dateFormatter: DateFormatter

@@ -31,7 +31,7 @@ public struct ReadOnlyOrderedDictionary<T>: Collection where T: UniqueIdentifica
     public init(items: [T]) {
         var dictionary = [String: Int](minimumCapacity: items.count)
         for (index, item) in items.enumerated() {
-            dictionary[item.uid] = index
+            dictionary[item.msgId] = index
         }
         self.items = items
         self.itemIndexesById = dictionary

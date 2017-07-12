@@ -62,6 +62,9 @@
 		93DF1C22384B663AEA6FC1A9CB8D60C4 /* Chatto-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 41A9B2AAC21030F2945A94BC7CBD1423 /* Chatto-dummy.m */; };
 		944EA8FCEC71BE1DB94DCFC0B83469FB /* PhotosInputCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF251D916062271C02F75B5F2B8DE99 /* PhotosInputCellProvider.swift */; };
 		949B1A94AE8BE8C36AF5E99A7894819C /* ChatInputItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1E82CAD7152CD2FD193F3CB83D58DB /* ChatInputItem.swift */; };
+		99BD70011F151A8B0008D578 /* TimeSeparatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BD70001F151A8B0008D578 /* TimeSeparatorModel.swift */; };
+		99BD70031F151AA20008D578 /* TimeSeparatorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BD70021F151AA20008D578 /* TimeSeparatorPresenter.swift */; };
+		99BD70051F151AB30008D578 /* TimeSeparatorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BD70041F151AB30008D578 /* TimeSeparatorCollectionViewCell.swift */; };
 		9A3121027E7698EC1E363BE689D326B8 /* LiveCameraCaptureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9733C3B5603FBC8B29D2242BD9C4F77 /* LiveCameraCaptureSession.swift */; };
 		9E0879FB9F4E503B226F826947D0C238 /* AccessoryViewRevealer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8BD3DC93B8EF607B5A8A310BE706B5 /* AccessoryViewRevealer.swift */; };
 		A3E980C1E3AC353B95A1E6AB62996A58 /* CircleProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D6C55F9D2154453D141CE8581CE9C04 /* CircleProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -170,6 +173,9 @@
 		95FE43AE16BC2356351CE54411E7A09B /* KeyboardTracker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyboardTracker.swift; sourceTree = "<group>"; };
 		961128FF1A749C3F63AFBE1567DE603F /* PhotosChatInputItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotosChatInputItem.swift; sourceTree = "<group>"; };
 		9661D8308C0146658FC05299FF59AA85 /* Pods-ChattoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ChattoApp.debug.xcconfig"; sourceTree = "<group>"; };
+		99BD70001F151A8B0008D578 /* TimeSeparatorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSeparatorModel.swift; sourceTree = "<group>"; };
+		99BD70021F151AA20008D578 /* TimeSeparatorPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSeparatorPresenter.swift; sourceTree = "<group>"; };
+		99BD70041F151AB30008D578 /* TimeSeparatorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSeparatorCollectionViewCell.swift; sourceTree = "<group>"; };
 		9A86BB529672BD73A0752E3D5802DB6E /* BaseMessageViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseMessageViewModel.swift; sourceTree = "<group>"; };
 		9CC12F31AA8B7C20FD1784C4E98C7A9D /* ChatCollectionViewLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatCollectionViewLayout.swift; sourceTree = "<group>"; };
 		A08372A7F06F42D7685F1EA4D9EC0370 /* BaseMessageCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BaseMessageCollectionViewCell.swift; path = Views/BaseMessageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -299,6 +305,7 @@
 		10D1CF6F7A3BE3DB82A560C2A2B79C7B /* Chat Items */ = {
 			isa = PBXGroup;
 			children = (
+				99BD6FFF1F151A6E0008D578 /* Time Separator */,
 				EFB24BF7C27826C28B0AE3D7423754F9 /* ChatItemDecorationAttributes.swift */,
 				BCBE479E8E102F5E19822C5DDDC0D3E4 /* BaseMessage */,
 				5CD318527B87406761CF1FAAC7A3AC51 /* PhotoMessages */,
@@ -536,6 +543,16 @@
 				667C1CA3478EA3D81ADADD11F7EFB62C /* BaseMessageAssets.xcassets */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		99BD6FFF1F151A6E0008D578 /* Time Separator */ = {
+			isa = PBXGroup;
+			children = (
+				99BD70001F151A8B0008D578 /* TimeSeparatorModel.swift */,
+				99BD70021F151AA20008D578 /* TimeSeparatorPresenter.swift */,
+				99BD70041F151AB30008D578 /* TimeSeparatorCollectionViewCell.swift */,
+			);
+			path = "Time Separator";
 			sourceTree = "<group>";
 		};
 		A3643B3F3761685639739C82F2307E77 /* Views */ = {
@@ -865,18 +882,21 @@
 				1C8A0EFD3EB2A1802B0686B26770CA00 /* BaseChatViewController+Changes.swift in Sources */,
 				84C0E170146FF3AE917C0F70D7ABE740 /* BaseChatViewController+Presenters.swift in Sources */,
 				D211781B9A7359B64504CEF607B33539 /* BaseChatViewController+Scrolling.swift in Sources */,
+				99BD70011F151A8B0008D578 /* TimeSeparatorModel.swift in Sources */,
 				F97A060F8F8A4EA5625817B853DE24EA /* BaseChatViewController.swift in Sources */,
 				642ABB656474A70303ED5D1784CEE307 /* BaseChatViewControllerView.swift in Sources */,
 				A845CC193EC7C2DB469C981A38833BE6 /* ChatCollectionViewLayout.swift in Sources */,
 				3AFCF8BD14A727B60317F765E63BA5A3 /* ChatDataSourceProtocol.swift in Sources */,
 				D7BC6DD82B0DE5B63EE0AF36503B39CF /* ChatItemCompanion.swift in Sources */,
 				D9F3F80693F694583820F71692B152FC /* ChatItemPresenterFactory.swift in Sources */,
+				99BD70031F151AA20008D578 /* TimeSeparatorPresenter.swift in Sources */,
 				09C3BA0AC03C054EF21C73B417C47F0B /* ChatItemProtocolDefinitions.swift in Sources */,
 				93DF1C22384B663AEA6FC1A9CB8D60C4 /* Chatto-dummy.m in Sources */,
 				938553A9900F0ED129896CE9335247EC /* CollectionChanges.swift in Sources */,
 				0E3A877EFED45D642822D20A5E9130ED /* DummyChatItemPresenter.swift in Sources */,
 				54B4530688F6EC423AACEF083D286FF9 /* KeyboardTracker.swift in Sources */,
 				C37E6371A36AA5A01B9728926E539097 /* ReadOnlyOrderedDictionary.swift in Sources */,
+				99BD70051F151AB30008D578 /* TimeSeparatorCollectionViewCell.swift in Sources */,
 				00E7CFDA07DB9D3C1349719B5F30B4DA /* SerialTaskQueue.swift in Sources */,
 				BEBEDDB6DB64A74879929323D7FF3BE0 /* Utils.swift in Sources */,
 			);

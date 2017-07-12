@@ -25,9 +25,14 @@
 import Foundation
 import Chatto
 
+public enum MessageType: Int32 {
+    case TEXT = 0
+    case PHOTO = 1
+}
+
 class FakeDataSource: ChatDataSourceProtocol {
     var nextMessageId: Int = 0
-    let preferredMaxWindowSize = 500
+    let preferredMaxWindowSize = 100
 
     var slidingWindow: SlidingDataSource<ChatItemProtocol>!
     init(count: Int, pageSize: Int) {
@@ -79,7 +84,7 @@ class FakeDataSource: ChatDataSourceProtocol {
     func addTextMessage(_ text: String) {
         let uid = "\(self.nextMessageId)"
         self.nextMessageId += 1
-        let message = createMessageModel(uid, type: "text", text: text, isIncoming: false)
+        let message = createMessageModel(uid, type: MessageType.TEXT.rawValue, text: text, isIncoming: false)
         self.messageSender.sendMessage(message)
         self.slidingWindow.insertItem(message, position: .bottom)
         self.delegate?.chatDataSourceDidUpdate(self)
@@ -88,7 +93,7 @@ class FakeDataSource: ChatDataSourceProtocol {
     func addPhotoMessage(_ image: UIImage) {
         let uid = "\(self.nextMessageId)"
         self.nextMessageId += 1
-        let message = createMessageModel(uid, type: "photo", text: "", isIncoming: false)
+        let message = createMessageModel(uid, type: MessageType.PHOTO.rawValue, text: "", isIncoming: false)
         message.image = image
         self.messageSender.sendMessage(message)
         self.slidingWindow.insertItem(message, position: .bottom)

@@ -48,15 +48,15 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             sSelf.updateModels(newItems: newItems, oldItems: oldItems, updateType: updateType, completion: {
                 guard let sSelf = self else { return }
                 if sSelf.updateQueue.isEmpty {
-                    sSelf.enqueueMessageCountReductionIfNeeded()
+                    sSelf.enqueueMessageCountReductionIfNeeded(newItems.count)
                 }
                 completion()
             })
         })
     }
 
-    public func enqueueMessageCountReductionIfNeeded() {
-        guard let preferredMaxMessageCount = self.constants.preferredMaxMessageCount, (self.chatDataSource?.chatItems.count ?? 0) > preferredMaxMessageCount else { return }
+    public func enqueueMessageCountReductionIfNeeded(_ itemCount: Int) {
+        guard let preferredMaxMessageCount = self.constants.preferredMaxMessageCount, itemCount > preferredMaxMessageCount else { return }
         self.updateQueue.addTask { [weak self] (completion) -> Void in
             guard let sSelf = self else { return }
             sSelf.chatDataSource?.adjustNumberOfMessages(preferredMaxCount: sSelf.constants.preferredMaxMessageCountAdjustment, focusPosition: sSelf.focusPosition, completion: { (didAdjust) -> Void in
@@ -284,12 +284,12 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
             // Oherwise updateVisibleCells may try to update existing cell with a new presenter which is working with a different type of cell
 
             // Optimization: reuse presenter if it's the same instance.
-            if let oldChatItemCompanion = oldItems[decoratedChatItem.uid], oldChatItemCompanion.chatItem === chatItem {
+            if let oldChatItemCompanion = oldItems[decoratedChatItem.msgId], oldChatItemCompanion.chatItem === chatItem {
                 presenter = oldChatItemCompanion.presenter
             } else {
                 presenter = self.createPresenterForChatItem(decoratedChatItem.chatItem)
             }
-            return ChatItemCompanion(uid: decoratedChatItem.uid, chatItem: decoratedChatItem.chatItem, presenter: presenter, decorationAttributes: decoratedChatItem.decorationAttributes)
+            return ChatItemCompanion(msgId: decoratedChatItem.msgId, chatItem: decoratedChatItem.chatItem, presenter: presenter, decorationAttributes: decoratedChatItem.decorationAttributes)
         })
     }
 

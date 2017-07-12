@@ -53,13 +53,13 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
                 }
 
                 if let previousMessage = prev as? MessageModelProtocol {
-                    addTimeSeparator = !calendar.isDate(currentMessage.date, inSameDayAs: previousMessage.date)
+                    addTimeSeparator = !calendar.isDate(currentMessage.messagedOn, inSameDayAs: previousMessage.messagedOn)
                 } else {
                     addTimeSeparator = true
                 }
 
                 if addTimeSeparator {
-                    let dateTimeStamp = DecoratedChatItem(chatItem: TimeSeparatorModel(uid: "\(currentMessage.uid)-time-separator", date: currentMessage.date.toWeekDayAndDateString()), decorationAttributes: nil)
+                    let dateTimeStamp = DecoratedChatItem(chatItem: TimeSeparatorModel(msgId: "\(currentMessage.msgId)-time-separator", date: currentMessage.messagedOn.toWeekDayAndDateString()), decorationAttributes: nil)
                     decoratedChatItems.append(dateTimeStamp)
                 }
             }
@@ -80,7 +80,7 @@ final class ChatItemsDemoDecorator: ChatItemsDecoratorProtocol {
 
         if currentMessage.senderId != nextMessage.senderId {
             return Constants.normalSeparation
-        } else if nextMessage.date.timeIntervalSince(currentMessage.date) > Constants.timeIntervalThresholdToIncreaseSeparation {
+        } else if nextMessage.messagedOn.timeIntervalSince(currentMessage.messagedOn) > Constants.timeIntervalThresholdToIncreaseSeparation {
             return Constants.normalSeparation
         } else {
             return Constants.shortSeparation

@@ -1,18 +1,18 @@
 /*
  The MIT License (MIT)
-
+ 
  Copyright (c) 2015-present Badoo Trading Limited.
-
+ 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
-
+ 
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
-
+ 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,28 +20,27 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-*/
+ */
 
 import Foundation
 import UIKit
-import Chatto
 
-class TimeSeparatorModel: ChatItemProtocol {
-    let uid: String
-    let type: String = TimeSeparatorModel.chatItemType
+open class TimeSeparatorModel: ChatItemProtocol {
+    public let msgId: String
+    public let msgType: Int32 = TimeSeparatorModel.chatItemType
     let date: String
-
-    static var chatItemType: ChatItemType {
-        return "TimeSeparatorModel"
+    
+    public static var chatItemType: ChatItemType {
+        return -1
     }
-
-    init(uid: String, date: String) {
+    
+    public init(msgId: String, date: String) {
         self.date = date
-        self.uid = uid
+        self.msgId = msgId
     }
 }
 
-extension Date {
+public extension Date {
     // Have a time stamp formatter to avoid keep creating new ones. This improves performance
     private static let weekdayAndDateStampDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -49,7 +48,7 @@ extension Date {
         dateFormatter.dateFormat = "EEEE, MMM dd yyyy" // "Monday, Mar 7 2016"
         return dateFormatter
     }()
-
+    
     func toWeekDayAndDateString() -> String {
         return Date.weekdayAndDateStampDateFormatter.string(from: self)
     }

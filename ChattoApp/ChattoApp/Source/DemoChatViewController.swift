@@ -78,8 +78,8 @@ class DemoChatViewController: BaseChatViewController {
         photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
 
         return [
-            "text": [ textMessagePresenter ],
-            "photo": [ photoMessagePresenter ],
+            MessageType.TEXT.rawValue: [ textMessagePresenter ],
+            MessageType.PHOTO.rawValue: [ photoMessagePresenter ],
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
         ]
     }

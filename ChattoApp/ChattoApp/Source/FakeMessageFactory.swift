@@ -37,7 +37,7 @@ func createMessageModel(_ uid: String, type: ChatItemType, text: String, isIncom
     let senderId = isIncoming ? "1" : "2"
     let messageModel = Message(msgId: uid, msgType: type, senderId: senderId, isIncoming: isIncoming, date: Date(), status: MessageStatus.PENDING.rawValue, msgText: text)
     
-    if type != "text" {
+    if type != MessageType.TEXT.rawValue {
         messageModel.image = UIImage(named: text)
     }
     return messageModel
@@ -68,7 +68,7 @@ class FakeMessageFactory {
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
         let text = "\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
-        return ChattoApp.createMessageModel(uid, type: "text", text: text, isIncoming: isIncoming)
+        return ChattoApp.createMessageModel(uid, type: MessageType.TEXT.rawValue, text: text, isIncoming: isIncoming)
     }
 
     class func createPhotoMessageModel(_ uid: String, isIncoming: Bool) -> Message {
@@ -83,26 +83,26 @@ class FakeMessageFactory {
         default:
             imageName = "pic-test-3"
         }
-        return ChattoApp.createMessageModel(uid, type: "image", text: imageName, isIncoming: isIncoming)
+        return ChattoApp.createMessageModel(uid, type: MessageType.PHOTO.rawValue, text: imageName, isIncoming: isIncoming)
     }
 }
 
 class TutorialMessageFactory {
     static let messages = [
-        ("text", "Welcome to Chatto! A lightweight Swift framework to build chat apps"),
-        ("text", "It calculates sizes in the background for smooth pagination and rotation, and it can deal with thousands of messages with a sliding data source"),
-        ("text", "Along with Chatto there's ChattoAdditions, with bubbles and the input component"),
-        ("text", "This is a TextMessageCollectionViewCell. It uses UITextView with data detectors so you can interact with urls: https://github.com/badoo/Chatto, phone numbers: 07400000000, dates: 3 jan 2016 and others"),
-        ("image", "pic-test-1"),
-        ("image", "pic-test-2"),
-        ("image", "pic-test-3"),
-        ("text", "Those were some PhotoMessageCollectionViewCell. With some fake data transfer"),
-        ("text", "Both Text and Photo cells inherit from BaseMessageCollectionViewCell which adds support for a failed icon and a timestamp you can reveal by swiping from the right"),
-        ("text", "Each message is paired with a Presenter. Each presenter is responsible to present a message by managing a corresponding UICollectionViewCell. New types of messages can be easily added by creating new types of presenters!"),
-        ("text", "Messages have different margins and only some bubbles show a tail. This is done with a decorator that conforms to ChatItemsDecoratorProtocol"),
-        ("text", "Failed/sending status are completly separated cells. This helps to keep cells them simpler. They are generated with the decorator as well, but other approaches are possible, like being returned by the DataSource or using more complex cells"),
-        ("text", "More info on https://github.com/badoo/Chatto. We are waiting for your pull requests!")
-    ]
+        (MessageType.TEXT.rawValue, "Welcome to Chatto! A lightweight Swift framework to build chat apps"),
+        (MessageType.TEXT.rawValue, "It calculates sizes in the background for smooth pagination and rotation, and it can deal with thousands of messages with a sliding data source"),
+        (MessageType.TEXT.rawValue, "Along with Chatto there's ChattoAdditions, with bubbles and the input component"),
+        (MessageType.TEXT.rawValue, "This is a TextMessageCollectionViewCell. It uses UITextView with data detectors so you can interact with urls: https://github.com/badoo/Chatto, phone numbers: 07400000000, dates: 3 jan 2016 and others"),
+        (MessageType.PHOTO.rawValue, "pic-test-1"),
+        (MessageType.PHOTO.rawValue, "pic-test-2"),
+        (MessageType.PHOTO.rawValue, "pic-test-3"),
+        (MessageType.TEXT.rawValue, "Those were some PhotoMessageCollectionViewCell. With some fake data transfer"),
+        (MessageType.TEXT.rawValue, "Both Text and Photo cells inherit from BaseMessageCollectionViewCell which adds support for a failed icon and a timestamp you can reveal by swiping from the right"),
+        (MessageType.TEXT.rawValue, "Each message is paired with a Presenter. Each presenter is responsible to present a message by managing a corresponding UICollectionViewCell. New types of messages can be easily added by creating new types of presenters!"),
+        (MessageType.TEXT.rawValue, "Messages have different margins and only some bubbles show a tail. This is done with a decorator that conforms to ChatItemsDecoratorProtocol"),
+        (MessageType.TEXT.rawValue, "Failed/sending status are completly separated cells. This helps to keep cells them simpler. They are generated with the decorator as well, but other approaches are possible, like being returned by the DataSource or using more complex cells"),
+        (MessageType.TEXT.rawValue, "More info on https://github.com/badoo/Chatto. We are waiting for your pull requests!")
+    ] as [(Int32, String)]
 
     static func createMessages() -> [MessageModelProtocol] {
         var result = [MessageModelProtocol]()

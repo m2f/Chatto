@@ -89,20 +89,18 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     let colors: Colors
     let bubbleBorderImages: BubbleBorderImages?
-    let failedIconImages: FailedIconImages
     let layoutConstants: BaseMessageCollectionViewCellLayoutConstants
     let dateTextStyle: DateTextStyle
     let avatarStyle: AvatarStyle
+    
     public init (
         colors: Colors = Class.createDefaultColors(),
         bubbleBorderImages: BubbleBorderImages? = Class.createDefaultBubbleBorderImages(),
-        failedIconImages: FailedIconImages = Class.createDefaultFailedIconImages(),
         layoutConstants: BaseMessageCollectionViewCellLayoutConstants = Class.createDefaultLayoutConstants(),
         dateTextStyle: DateTextStyle = Class.createDefaultDateTextStyle(),
         avatarStyle: AvatarStyle = AvatarStyle()) {
             self.colors = colors
             self.bubbleBorderImages = bubbleBorderImages
-            self.failedIconImages = failedIconImages
             self.layoutConstants = layoutConstants
             self.dateTextStyle = dateTextStyle
             self.avatarStyle = avatarStyle
@@ -116,8 +114,6 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
     public lazy var borderOutgoingTail: UIImage? = self.bubbleBorderImages?.borderOutgoingTail()
     public lazy var borderOutgoingNoTail: UIImage? = self.bubbleBorderImages?.borderOutgoingNoTail()
 
-    public lazy var failedIcon: UIImage = self.failedIconImages.normal()
-    public lazy var failedIconHighlighted: UIImage = self.failedIconImages.highlighted()
     private lazy var dateFont: UIFont = self.dateTextStyle.font()
     private lazy var dateFontColor: UIColor = self.dateTextStyle.color()
 
@@ -172,24 +168,14 @@ public extension BaseMessageCollectionViewCellDefaultStyle { // Default values
         )
     }
 
-    static public func createDefaultFailedIconImages() -> FailedIconImages {
-        let normal = {
-            return UIImage(named: "base-message-failed-icon", in: Bundle(for: Class.self), compatibleWith: nil)!
-        }
-        return FailedIconImages(
-            normal: normal(),
-            highlighted: normal().bma_blendWithColor(UIColor.black.withAlphaComponent(0.10))
-        )
-    }
-
     static public func createDefaultDateTextStyle() -> DateTextStyle {
         return DateTextStyle(font: UIFont.systemFont(ofSize: 12), color: UIColor.bma_color(rgb: 0x9aa3ab))
     }
 
     static public func createDefaultLayoutConstants() -> BaseMessageCollectionViewCellLayoutConstants {
-        return BaseMessageCollectionViewCellLayoutConstants(horizontalMargin: 11,
-                                                            horizontalInterspacing: 4,
-                                                            horizontalTimestampMargin: 11,
-                                                            maxContainerWidthPercentageForBubbleView: 0.68)
+        return BaseMessageCollectionViewCellLayoutConstants(
+            horizontalMargin: 11, horizontalInterspacing: 4,
+            horizontalTimestampMargin: 11,
+            maxContainerWidthPercentageForBubbleView: 0.68)
     }
 }

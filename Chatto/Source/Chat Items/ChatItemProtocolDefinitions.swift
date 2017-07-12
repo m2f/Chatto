@@ -24,10 +24,10 @@
 
 import Foundation
 
-public typealias ChatItemType = String
+public typealias ChatItemType = Int32
 
 public protocol ChatItemProtocol: class, UniqueIdentificable {
-    var type: ChatItemType { get }
+    var msgType: ChatItemType { get }
 }
 
 public protocol ChatItemDecorationAttributesProtocol {

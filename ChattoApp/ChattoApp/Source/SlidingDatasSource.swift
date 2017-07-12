@@ -39,6 +39,7 @@ public class SlidingDataSource<Element> {
     private var itemsOffset: Int
     public var itemsInWindow: [Element] {
         let offset = self.windowOffset - self.itemsOffset
+        print("wo: \(self.windowOffset) wc: \(self.windowCount) io: \(self.itemsOffset) ic: \(self.items.count) \(self.windowOffset - self.itemsOffset) \((self.windowOffset - self.itemsOffset) + self.windowCount)")
         return Array(items[offset..<offset+self.windowCount])
     }
 

@@ -29,23 +29,23 @@ public protocol ChatItemsDecoratorProtocol {
 }
 
 public struct DecoratedChatItem: UniqueIdentificable {
-    public let uid: String
+    public let msgId: String
     public let chatItem: ChatItemProtocol
     public let decorationAttributes: ChatItemDecorationAttributesProtocol?
 
     public init(chatItem: ChatItemProtocol, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
-        self.init(uid: chatItem.uid, chatItem: chatItem, decorationAttributes: decorationAttributes)
+        self.init(msgId: chatItem.msgId, chatItem: chatItem, decorationAttributes: decorationAttributes)
     }
 
-    public init(uid: String, chatItem: ChatItemProtocol, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
-        self.uid = uid
+    public init(msgId: String, chatItem: ChatItemProtocol, decorationAttributes: ChatItemDecorationAttributesProtocol?) {
+        self.msgId = msgId
         self.chatItem = chatItem
         self.decorationAttributes = decorationAttributes
     }
 }
 
 public struct ChatItemCompanion: UniqueIdentificable {
-    public let uid: String
+    public let msgId: String
     public let chatItem: ChatItemProtocol
     public let presenter: ChatItemPresenterProtocol
     public var decorationAttributes: ChatItemDecorationAttributesProtocol?

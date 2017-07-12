@@ -25,7 +25,7 @@
 import Foundation
 
 public protocol UniqueIdentificable {
-    var uid: String { get }
+    var msgId: String { get }
 }
 
 public struct CollectionChangeMove: Equatable, Hashable {
@@ -64,8 +64,8 @@ func generateChanges(oldCollection: [UniqueIdentificable], newCollection: [Uniqu
         return map
     }
 
-    let oldIds = oldCollection.map { $0.uid }
-    let newIds = newCollection.map { $0.uid }
+    let oldIds = oldCollection.map { $0.msgId }
+    let newIds = newCollection.map { $0.msgId }
     let oldIndexsById = generateIndexesById(oldIds)
     let newIndexsById = generateIndexesById(newIds)
     var deletedIndexPaths = Set<IndexPath>()

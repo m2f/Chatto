@@ -106,6 +106,12 @@ class FakeDataSource: ChatDataSourceProtocol {
         self.slidingWindow.insertItem(message, position: .bottom)
         self.delegate?.chatDataSourceDidUpdate(self)
     }
+    
+    func markRead() {
+        let lastMessage = self.slidingWindow.items.last as! Message
+        lastMessage.status = 1
+        self.delegate?.chatDataSourceDidUpdate(self)
+    }
 
     func adjustNumberOfMessages(preferredMaxCount: Int?, focusPosition: Double, completion:(_ didAdjust: Bool) -> Void) {
         let didAdjust = self.slidingWindow.adjustWindow(focusPosition: focusPosition, maxWindowSize: preferredMaxCount ?? self.preferredMaxWindowSize)

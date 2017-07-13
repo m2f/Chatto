@@ -35,7 +35,7 @@ public class SlidingDataSource<Element> {
     private var windowOffset: Int
     private var windowCount: Int
     private var itemGenerator: (() -> Element)?
-    private var items = [Element]()
+    public var items = [Element]()
     private var itemsOffset: Int
     public var itemsInWindow: [Element] {
         let offset = self.windowOffset - self.itemsOffset

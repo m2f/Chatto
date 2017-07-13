@@ -34,6 +34,15 @@ public class DemoTextMessageViewModel: TextMessageViewModelProtocol {
         return message.msgText
     }
     
+    public var statusImage: UIImage? {
+        get {
+            return message.status == 0 ? UIImage(named: "ic_icon_duration") : UIImage(named: "ic_acknowledged")
+        }
+        set {
+            self.messageViewModel.statusImage = newValue
+        }
+    }
+    
     init(message: Message, messageViewModel: MessageViewModelProtocol) {
         self.message = message
         self.messageViewModel = messageViewModel

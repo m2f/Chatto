@@ -45,6 +45,17 @@ class DemoChatViewController: BaseChatViewController {
         super.chatItemsDecorator = ChatItemsDemoDecorator()
         let addIncomingMessageButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(DemoChatViewController.addRandomIncomingMessage))
         self.navigationItem.rightBarButtonItem = addIncomingMessageButton
+        
+        let markRead = UIBarButtonItem(title: "Read", style: .plain, target: self, action: #selector(markAsRead))
+        self.navigationItem.leftBarButtonItem = markRead
+        
+        self.collectionView.backgroundColor = UIColor.purple
+        
+    }
+    
+    @objc
+    private func markAsRead() {
+        self.dataSource.markRead()
     }
 
     @objc
@@ -69,7 +80,41 @@ class DemoChatViewController: BaseChatViewController {
             viewModelBuilder: DemoTextMessageViewModelBuilder(),
             interactionHandler: DemoTextMessageHandler(baseHandler: self.baseMessageHandler)
         )
-        textMessagePresenter.baseMessageStyle = BaseMessageCollectionViewCellAvatarStyle()
+        
+        let font = UIFont(name: "PTSans-Regular", size: 16)!
+        let fontTime = UIFont(name: "PTSans-Regular", size: 14)!
+        let ACCENT = UIColor(red: 254/255, green: 120/255, blue: 71/255, alpha: 1)
+        let TEXT_DARK = UIColor(red: 67/255, green: 67/255, blue: 67/255, alpha: 1)
+        let TEXT_LIGHT = UIColor(red: 83/255, green: 83/255, blue: 88/255, alpha: 1)
+        let WHITE = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+        let WHITE_70 = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
+
+
+        
+        let textStyle = TextMessageCollectionViewCellDefaultStyle.TextStyle(
+            font: font,
+            incomingColor: TEXT_DARK,
+            outgoingColor: WHITE,
+            timeAndStatusFont: fontTime,
+            timeAndStatusIncomingColor: TEXT_LIGHT,
+            timeAndStatusOutgoingColor: WHITE_70,
+            incomingInsets: UIEdgeInsets(top: 10, left: 19, bottom: 10, right: 15),
+            outgoingInsets: UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 19))
+        
+        let bubbleColors = BaseMessageCollectionViewCellDefaultStyle.Colors(
+            incoming: WHITE,
+            outgoing: ACCENT)
+        
+        let avatarStyle = BaseMessageCollectionViewCellDefaultStyle.AvatarStyle(
+            size: CGSize(width: 35, height: 35),
+            alignment: .center)
+
+        let dateSeparatorStyle = BaseMessageCollectionViewCellDefaultStyle.DateTextStyle(font: font, color: TEXT_DARK)
+
+        let baseStyle = BaseMessageCollectionViewCellAvatarStyle(colors: bubbleColors, bubbleBorderImages: nil, layoutConstants: BaseMessageCollectionViewCellDefaultStyle.createDefaultLayoutConstants(), dateTextStyle: dateSeparatorStyle, avatarStyle: avatarStyle)
+
+        textMessagePresenter.textCellStyle = TextMessageCollectionViewCellDefaultStyle(bubbleImages: TextMessageCollectionViewCellDefaultStyle.createDefaultBubbleImages(), textStyle: textStyle, baseStyle: baseStyle)
+        
 
         let photoMessagePresenter = PhotoMessagePresenterBuilder(
             viewModelBuilder: DemoPhotoMessageViewModelBuilder(),

@@ -291,7 +291,7 @@ private final class TextBubbleLayoutModel {
         self.bubbleFrame = CGRect(origin: CGPoint.zero, size: bubbleSize)
         self.textFrame = self.bubbleFrame
         self.size = bubbleSize
-        let width: CGFloat = self.layoutContext.isIncoming ? 72 : 88
+        let width: CGFloat = self.layoutContext.isIncoming ? 56 : 72
         let xOffset = textFrame.width - (width + 8)
         self.timeAndStatusFrame = CGRect(
             x: xOffset, y: textFrame.height - 24,

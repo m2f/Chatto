@@ -212,6 +212,6 @@ extension NSTextAttachment {
     public func setImageHeight(font: UIFont) {
         guard let image = image else { return }
         let ratio = image.size.width / image.size.height
-        bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: ratio * font.pointSize, height: font.pointSize)
+        bounds = CGRect(x: bounds.origin.x, y: font.descender/2, width: ratio * font.pointSize, height: font.pointSize)
     }
 }

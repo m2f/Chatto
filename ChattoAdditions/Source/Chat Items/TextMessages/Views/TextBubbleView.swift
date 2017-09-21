@@ -166,8 +166,8 @@ public final class TextBubbleView: UIView, MaximumLayoutWidthSpecificable, Backg
         if self.textView.textColor != textColor {
             self.textView.textColor = textColor
             self.textView.linkTextAttributes = [
-                NSForegroundColorAttributeName: textColor,
-                NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+                NSAttributedStringKey.foregroundColor.rawValue: textColor,
+                NSAttributedStringKey.underlineStyle.rawValue : NSUnderlineStyle.styleSingle.rawValue
             ]
             needsToUpdateText = true
         }
@@ -322,8 +322,8 @@ private final class TextBubbleLayoutModel {
         // See https://github.com/badoo/Chatto/issues/129
         let extraText = self.layoutContext.isIncoming ? "03:63 PM" : "03:59 AM I"
         return NSTextStorage(string: "\(self.layoutContext.text) \(extraText)",
-            attributes: [ NSFontAttributeName: self.layoutContext.font,
-            "NSOriginalFont": self.layoutContext.font
+            attributes: [ NSAttributedStringKey.font: self.layoutContext.font,
+            NSAttributedStringKey(rawValue: "NSOriginalFont"): self.layoutContext.font
         ])
     }
 }

@@ -38,7 +38,7 @@ public class SlidingDataSource<Element> {
     public var items = [Element]()
     private var itemsOffset: Int
     
-    private var itemsInWindow = [Element]()
+    internal var itemsInWindow = [Element]()
     
     private var lastStartOffset = 0
     private var lastItemsCount = 0

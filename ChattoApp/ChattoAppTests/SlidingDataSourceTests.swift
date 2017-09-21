@@ -47,7 +47,7 @@ class SlidingDataSourceTests: XCTestCase {
         let expectedArray = (0..<10).reversed().map { (id) -> String in
             return "\(id)"
         }
-        let dataSource = SlidingDataSource(count: 10, pageSize: 50) { () -> String in
+        let dataSource = SlidingDataSource(count: 10, pageSize: 50) { (_) -> String in
             defer { uid += 1 }
             return "\(uid)"
         }
@@ -59,7 +59,7 @@ class SlidingDataSourceTests: XCTestCase {
 
     func testThat_WhenCountIsZero_ThenInitializesCorrectly() {
         var uid = 0
-        let dataSource = SlidingDataSource(count: 0, pageSize: 50) { () -> String in
+        let dataSource = SlidingDataSource(count: 0, pageSize: 50) { (_) -> String in
             defer { uid += 1 }
             return "\(uid)"
         }

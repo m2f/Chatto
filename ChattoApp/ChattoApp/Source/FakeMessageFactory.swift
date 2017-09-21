@@ -67,7 +67,7 @@ class FakeMessageFactory {
         let incomingText: String = isIncoming ? "incoming" : "outgoing"
         let maxText = self.demoTexts.randomItem()
         let length: Int = 10 + Int(arc4random_uniform(300))
-        let text = "\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
+        let text = uid//"\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
         return ChattoApp.createMessageModel(uid, type: MessageType.TEXT.rawValue, text: text, isIncoming: isIncoming)
     }
 
@@ -109,6 +109,19 @@ class TutorialMessageFactory {
         for (index, message) in self.messages.enumerated() {
             let type = message.0
             let content = message.1
+            let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
+            result.append(createMessageModel("tutorial-\(index)", type: type, text: content, isIncoming: isIncoming))
+        }
+        return result
+    }
+}
+
+class SlidingTestMessageFactory {
+    static func createMessages() -> [MessageModelProtocol] {
+        var result = [MessageModelProtocol]()
+        for i in 0..<100 {
+            let type = MessageType.TEXT.rawValue
+            let content = "\(i)\n"
             let isIncoming: Bool = arc4random_uniform(100) % 2 == 0
             result.append(createMessageModel("tutorial-\(index)", type: type, text: content, isIncoming: isIncoming))
         }

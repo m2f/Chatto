@@ -36,6 +36,7 @@ public class DemoTextMessageViewModel: TextMessageViewModelProtocol {
     
     public var statusImage: UIImage? {
         get {
+            print("Message status is \(message.status)")
             return message.status == 0 ? UIImage(named: "ic_icon_duration") : UIImage(named: "ic_acknowledged")
         }
         set {

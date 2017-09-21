@@ -31,9 +31,9 @@ class ReadOnlyOrderedDictionaryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let items = [
-            FakeChatItem(uid: "3", type: "type3"),
-            FakeChatItem(uid: "1", type: "type1"),
-            FakeChatItem(uid: "2", type: "type2")
+            FakeChatItem(uid: "3", type: 3),
+            FakeChatItem(uid: "1", type: 1),
+            FakeChatItem(uid: "2", type: 2)
         ]
         self.orderedDictionary = ReadOnlyOrderedDictionary<FakeChatItem>(items: items)
     }
@@ -51,7 +51,7 @@ class ReadOnlyOrderedDictionaryTests: XCTestCase {
     }
 
     func testThat_WhenSubscriptingByExistingKey_ThenReturnsCorrectValue() {
-        XCTAssertEqual(self.orderedDictionary["3"]?.type, "type3")
+        XCTAssertEqual(self.orderedDictionary["3"]?.msgType, 3)
     }
 
     func testThat_WhenSubscriptingByNonExistingKey_ThenReturnsNil() {

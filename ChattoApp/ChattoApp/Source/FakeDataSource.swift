@@ -32,13 +32,12 @@ public enum MessageType: Int32 {
 
 class FakeDataSource: ChatDataSourceProtocol {
     var nextMessageId: Int = 0
-    let preferredMaxWindowSize = 100
+    let preferredMaxWindowSize = 200
 
     var slidingWindow: SlidingDataSource<ChatItemProtocol>!
     init(count: Int, pageSize: Int) {
-        self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { () -> ChatItemProtocol in
-            defer { self.nextMessageId += 1 }
-            return FakeMessageFactory.createChatItem("\(self.nextMessageId)")
+        self.slidingWindow = SlidingDataSource(count: count, pageSize: pageSize) { (index) -> ChatItemProtocol in
+            return FakeMessageFactory.createChatItem("\(index)")
         }
     }
 
@@ -64,7 +63,7 @@ class FakeDataSource: ChatDataSourceProtocol {
     }
 
     var chatItems: [ChatItemProtocol] {
-        return self.slidingWindow.itemsInWindow
+        return self.slidingWindow.getWindowItems()
     }
 
     weak var delegate: ChatDataSourceDelegateProtocol?
@@ -108,7 +107,7 @@ class FakeDataSource: ChatDataSourceProtocol {
     }
     
     func markRead() {
-        let lastMessage = self.slidingWindow.items.last as! Message
+        let lastMessage = self.slidingWindow.items.randomItem() as! Message
         lastMessage.status = 1
         self.delegate?.chatDataSourceDidUpdate(self)
     }

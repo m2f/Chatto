@@ -30,45 +30,46 @@ public enum InsertPosition {
 }
 
 public class SlidingDataSource<Element> {
-
+    
     private var pageSize: Int
     private var windowOffset: Int
     private var windowCount: Int
-    private var itemGenerator: (() -> Element)?
+    private var itemGenerator: ((_ index: Int) -> Element)?
     public var items = [Element]()
     private var itemsOffset: Int
-    public var itemsInWindow: [Element] {
-        let offset = self.windowOffset - self.itemsOffset
-        print("wo: \(self.windowOffset) wc: \(self.windowCount) io: \(self.itemsOffset) ic: \(self.items.count) \(self.windowOffset - self.itemsOffset) \((self.windowOffset - self.itemsOffset) + self.windowCount)")
-        return Array(items[offset..<offset+self.windowCount])
-    }
-
-    public init(count: Int, pageSize: Int, itemGenerator: (() -> Element)?) {
+    
+    private var itemsInWindow = [Element]()
+    
+    private var lastStartOffset = 0
+    private var lastItemsCount = 0
+    
+    public init(count: Int, pageSize: Int, itemGenerator: ((_ index: Int) -> Element)?) {
         self.windowOffset = count
         self.itemsOffset = count
         self.windowCount = 0
         self.pageSize = pageSize
         self.itemGenerator = itemGenerator
-        self.generateItems(min(pageSize, count), position: .top)
+        self.generateItems(startIndex: 0, count: min(pageSize, count), position: .top)
     }
-
+    
     public convenience init(items: [Element], pageSize: Int) {
         self.init(count: 0, pageSize: pageSize, itemGenerator: nil)
         for item in items {
             self.insertItem(item, position: .bottom)
         }
     }
-
-    private func generateItems(_ count: Int, position: InsertPosition) {
+    
+    private func generateItems(startIndex: Int, count: Int, position: InsertPosition) {
         guard count > 0 else { return }
         guard let itemGenerator = self.itemGenerator else {
             fatalError("Can't create messages without a generator")
         }
-        for _ in 0..<count {
-            self.insertItem(itemGenerator(), position: .top)
+        let endIndex = startIndex + count
+        for index in startIndex..<endIndex {
+            self.insertItem(itemGenerator(index), position: .top)
         }
     }
-
+    
     public func insertItem(_ item: Element, position: InsertPosition) {
         if position == .top {
             self.items.insert(item, at: 0)
@@ -86,34 +87,61 @@ public class SlidingDataSource<Element> {
             self.items.append(item)
         }
     }
+    
+    public func getWindowItems() -> [Element] {
+        
+        let startOffset = self.windowOffset - self.itemsOffset
+        let endOffset = startOffset + windowCount
+        let currentItemsCount = items.count
+        
+        if currentItemsCount == lastItemsCount + 1 {
+            //a new item is added so append and return
+            itemsInWindow.append(items[lastItemsCount])
+            lastItemsCount = currentItemsCount
+            lastStartOffset = startOffset
+            return itemsInWindow
+            
+        } else if currentItemsCount == lastItemsCount && startOffset == lastStartOffset {
+            //update of existing items so return the same items
+            return itemsInWindow
+        }
+        print("wo: \(self.windowOffset) wc: \(self.windowCount) io: \(self.itemsOffset) ic: \(self.items.count) \(startOffset) \(endOffset)")
 
+        //since the offsets are different we copy and return all
+        itemsInWindow = Array(items[startOffset..<endOffset])
+        lastItemsCount = currentItemsCount
+        lastStartOffset = startOffset
+        return itemsInWindow
+    }
+
+    
     public func hasPrevious() -> Bool {
         return self.windowOffset > 0
     }
-
+    
     public func hasMore() -> Bool {
         return self.windowOffset + self.windowCount < self.itemsOffset + self.items.count
     }
-
+    
     public func loadPrevious() {
         let previousWindowOffset = self.windowOffset
         let previousWindowCount = self.windowCount
         let nextWindowOffset = max(0, self.windowOffset - self.pageSize)
         let messagesNeeded = self.itemsOffset - nextWindowOffset
         if messagesNeeded > 0 {
-            self.generateItems(messagesNeeded, position: .top)
+            self.generateItems(startIndex: items.count, count: messagesNeeded, position: .top)
         }
         let newItemsCount = previousWindowOffset - nextWindowOffset
         self.windowOffset = nextWindowOffset
         self.windowCount = previousWindowCount + newItemsCount
     }
-
+    
     public func loadNext() {
         guard self.items.count > 0 else { return }
         let itemCountAfterWindow = self.itemsOffset + self.items.count - self.windowOffset - self.windowCount
         self.windowCount += min(self.pageSize, itemCountAfterWindow)
     }
-
+    
     @discardableResult
     public func adjustWindow(focusPosition: Double, maxWindowSize: Int) -> Bool {
         assert(0 <= focusPosition && focusPosition <= 1, "")

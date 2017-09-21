@@ -52,7 +52,7 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_PresentersAreCreated () {
         let presenterBuilder = FakePresenterBuilder()
-        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let controller = TesteableChatViewController(presenterBuilders: [1: [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
@@ -63,7 +63,7 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_WhenDataSourceChanges_ThenCollectionViewUpdatesAsynchronously() {
         let asyncExpectation = expectation(description: "update")
         let presenterBuilder = FakePresenterBuilder()
-        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let controller = TesteableChatViewController(presenterBuilders: [1: [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2)
         controller.chatDataSource = fakeDataSource
@@ -81,7 +81,7 @@ class ChatViewControllerTests: XCTestCase {
 
     func testThat_CollectionIsScrolledAtBottomAfterFirstLoad() {
         let presenterBuilder = FakePresenterBuilder()
-        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let controller = TesteableChatViewController(presenterBuilders: [1: [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         fakeDataSource.delegate?.chatDataSourceDidUpdate(fakeDataSource)
@@ -93,7 +93,7 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_GivenManyItems_WhenScrollToTop_ThenLoadsPreviousPage() {
         let asyncExpectation = expectation(description: "update")
         let presenterBuilder = FakePresenterBuilder()
-        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let controller = TesteableChatViewController(presenterBuilders: [1: [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         controller.chatDataSource = fakeDataSource
@@ -113,7 +113,7 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_WhenLoadsNextPage_ThenPreservesScrollPosition() {
         let asyncExpectation = expectation(description: "update")
         let presenterBuilder = FakePresenterBuilder()
-        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let controller = TesteableChatViewController(presenterBuilders: [1: [presenterBuilder]])
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
         controller.chatDataSource = fakeDataSource
@@ -139,7 +139,7 @@ class ChatViewControllerTests: XCTestCase {
         let asyncExpectation = expectation(description: "update")
         let updateQueue = SerialTaskQueueTestHelper()
         let presenterBuilder = FakePresenterBuilder()
-        let controller = TesteableChatViewController(presenterBuilders: ["fake-type": [presenterBuilder]])
+        let controller = TesteableChatViewController(presenterBuilders: [1: [presenterBuilder]])
         controller.updateQueue = updateQueue
         let fakeDataSource = FakeDataSource()
         fakeDataSource.chatItems = createFakeChatItems(count: 2000)
@@ -156,7 +156,7 @@ class ChatViewControllerTests: XCTestCase {
     func testThat_WhenUpdatesFinish_ControllerIsNotRetained() {
         let asyncExpectation = expectation(description: "update")
         let updateQueue = SerialTaskQueueTestHelper()
-        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [FakePresenterBuilder()]])
+        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: [1: [FakePresenterBuilder()]])
         weak var weakController = controller
         controller.updateQueue = updateQueue
         let fakeDataSource = FakeDataSource()
@@ -178,7 +178,7 @@ class ChatViewControllerTests: XCTestCase {
     }
 
     func testThat_WhenLayoutFinishes_ControllerIsNotRetained() {
-        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: ["fake-type": [FakePresenterBuilder()]])
+        var controller: TesteableChatViewController! = TesteableChatViewController(presenterBuilders: [1: [FakePresenterBuilder()]])
         weak var weakController = controller
         controller.chatDataSource = FakeDataSource()
 

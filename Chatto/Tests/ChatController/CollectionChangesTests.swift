@@ -132,8 +132,10 @@ func Move(_ from: Int, to: Int) -> CollectionChangeMove {
 }
 
 struct UniqueIdentificableItem: UniqueIdentificable {
+    var msgId: String
     let uid: String
     init(uid: String) {
         self.uid = uid
+        self.msgId = uid
     }
 }

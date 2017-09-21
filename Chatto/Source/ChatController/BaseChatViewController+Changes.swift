@@ -285,8 +285,10 @@ extension BaseChatViewController: ChatDataSourceDelegateProtocol {
 
             // Optimization: reuse presenter if it's the same instance.
             if let oldChatItemCompanion = oldItems[decoratedChatItem.msgId], oldChatItemCompanion.chatItem === chatItem {
+                print("Same presenter \(chatItem.msgId)")
                 presenter = oldChatItemCompanion.presenter
             } else {
+                print("new presenter \(chatItem.msgId)")
                 presenter = self.createPresenterForChatItem(decoratedChatItem.chatItem)
             }
             return ChatItemCompanion(msgId: decoratedChatItem.msgId, chatItem: decoratedChatItem.chatItem, presenter: presenter, decorationAttributes: decoratedChatItem.decorationAttributes)

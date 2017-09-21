@@ -27,7 +27,7 @@ THE SOFTWARE.
 func createFakeChatItems(count: Int) -> [ChatItemProtocol] {
     var items = [ChatItemProtocol]()
     for i in 0..<count {
-        items.append(FakeChatItem(uid: "\(i)", type: "fake-type"))
+        items.append(FakeChatItem(uid: "\(i)", type: 0))
     }
     return items
 }
@@ -85,7 +85,7 @@ class FakeCell: UICollectionViewCell {}
 class FakePresenterBuilder: ChatItemPresenterBuilderProtocol {
     var presentersCreatedCount: Int = 0
     func canHandleChatItem(_ chatItem: ChatItemProtocol) -> Bool {
-        return chatItem.type == "fake-type"
+        return chatItem.msgType == 0
     }
 
     func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
@@ -118,11 +118,13 @@ class FakePresenter: BaseChatItemPresenter<FakeCell> {
 }
 
 class FakeChatItem: ChatItemProtocol {
+    var msgId: String
+    var msgType: ChatItemType
     var uid: String
-    var type: ChatItemType
     init(uid: String, type: ChatItemType) {
         self.uid = uid
-        self.type = type
+        self.msgType = type
+        self.msgId = uid
     }
 }
 

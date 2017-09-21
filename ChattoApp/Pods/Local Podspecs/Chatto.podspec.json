@@ -1,6 +1,6 @@
 {
   "name": "Chatto",
-  "version": "4.0.0",
+  "version": "4.0.0x",
   "summary": "Chat framework in Swift",
   "description": "Lightweight chat framework to build Chat apps",
   "homepage": "https://github.com/badoo/Chatto",

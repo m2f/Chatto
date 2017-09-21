@@ -64,11 +64,7 @@ class FakeMessageFactory {
     }
 
     class func createTextMessageModel(_ uid: String, isIncoming: Bool) -> Message {
-        let incomingText: String = isIncoming ? "incoming" : "outgoing"
-        let maxText = self.demoTexts.randomItem()
-        let length: Int = 10 + Int(arc4random_uniform(300))
-        let text = uid//"\(maxText.substring(to: maxText.characters.index(maxText.startIndex, offsetBy: length))) incoming:\(incomingText), #:\(uid)"
-        return ChattoApp.createMessageModel(uid, type: MessageType.TEXT.rawValue, text: text, isIncoming: isIncoming)
+        return ChattoApp.createMessageModel(uid, type: MessageType.TEXT.rawValue, text: "test message", isIncoming: isIncoming)
     }
 
     class func createPhotoMessageModel(_ uid: String, isIncoming: Bool) -> Message {

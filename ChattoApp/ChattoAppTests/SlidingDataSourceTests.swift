@@ -32,7 +32,7 @@ class SlidingDataSourceTests: XCTestCase {
         let expectedArray = (0..<50).reversed().map { (id) -> String in
             return "\(id)"
         }
-        let dataSource = SlidingDataSource(count: 10000, pageSize: 50) { () -> String in
+        let dataSource = SlidingDataSource<String>(count: 10000, pageSize: 50) { (index) -> String in
             defer { uid += 1 }
             return "\(uid)"
         }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Chatto"
-  s.version      = "4.0.0x"
+  s.version      = "4.0.1x"
   s.summary      = "Chat framework in Swift"
   s.description  = <<-DESC
                    Lightweight chat framework to build Chat apps

@@ -3,13 +3,13 @@ import Chatto
 import ChattoAdditions
 
 public class Message: MessageModelProtocol {
-    public dynamic var msgId: String = ""
-    public dynamic var msgType: ChatItemType
-    public dynamic var senderId: String = ""
-    public dynamic var isIncoming: Bool
-    public dynamic var messagedOn: Date
-    public dynamic var status: Int32 = 0
-    public dynamic var msgText: String = "" //may contain text or image url
+    @objc public dynamic var msgId: String = ""
+    @objc public dynamic var msgType: ChatItemType
+    @objc public dynamic var senderId: String = ""
+    @objc public dynamic var isIncoming: Bool
+    @objc public dynamic var messagedOn: Date
+    @objc public dynamic var status: Int32 = 0
+    @objc public dynamic var msgText: String = "" //may contain text or image url
     
     public var image: UIImage?
     

@@ -49,7 +49,8 @@ class ConversationsViewController: UITableViewController {
                 return controller
             }
             if let tabController = segue.destination as? UITabBarController,
-                let controller = tabController.viewControllers?.first as? DemoChatViewController {
+                let controller = tabController.viewControllers?.first
+                    as? DemoChatViewController {
                 return controller
             }
             return nil
@@ -59,6 +60,7 @@ class ConversationsViewController: UITableViewController {
             dataSource = FakeDataSource(count: initialCount, pageSize: pageSize)
         }
         chatController.dataSource = dataSource
+        chatController.hidesBottomBarWhenPushed = true
         chatController.messageSender = dataSource.messageSender
     }
 }

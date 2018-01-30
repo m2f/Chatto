@@ -1,6 +1,6 @@
 {
   "name": "ChattoAdditions",
-  "version": "4.0.0",
+  "version": "4.0.1x",
   "summary": "UI componentes for Chatto",
   "description": "Text and photo bubbles\nInput bar for text and photo messages",
   "homepage": "https://github.com/badoo/Chatto",
@@ -8,7 +8,7 @@
     "type": "MIT"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
   "authors": {
     "Diego Sanchez": "diego.sanchezr@gmail.com"

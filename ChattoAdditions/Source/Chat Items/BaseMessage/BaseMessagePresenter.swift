@@ -103,8 +103,10 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     open func configureCell(_ cell: CellT, decorationAttributes: ChatItemDecorationAttributes, animated: Bool, additionalConfiguration: (() -> Void)?) {
         cell.performBatchUpdates({ () -> Void in
             self.messageViewModel.showsTail = decorationAttributes.showsTail
-            cell.avatarView.isHidden = !decorationAttributes.canShowAvatar
-            cell.bubbleView.isUserInteractionEnabled = true // just in case something went wrong while showing UIMenuController
+            DispatchQueue.main.async {
+                cell.avatarView.isHidden = !decorationAttributes.canShowAvatar
+                cell.bubbleView.isUserInteractionEnabled = true // just in case something went wrong while showing UIMenuController
+            }
             cell.baseStyle = self.cellStyle
             cell.messageViewModel = self.messageViewModel
             cell.onBubbleTapped = { [weak self] (cell) in

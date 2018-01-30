@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ChattoAdditions"
-  s.version      = "4.0.1x"
+  s.version      = "4.0.2x"
   s.summary      = "UI componentes for Chatto"
   s.description  = <<-DESC
                    Text and photo bubbles
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/badoo/Chatto"
   s.license      = { :type => "MIT"}
-  s.platform     = :ios, "8.0"
+  s.platform     = :ios, "9.0"
   s.authors      = { 'Diego Sanchez' => 'diego.sanchezr@gmail.com' }
   s.source       = { :git => "https://github.com/m2f/Chatto.git", :branch => "master" }
   s.source_files = "ChattoAdditions/Source/**/*.{h,m,swift}"

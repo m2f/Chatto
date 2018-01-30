@@ -49,7 +49,7 @@ class DemoChatViewController: BaseChatViewController {
         let markRead = UIBarButtonItem(title: "Read", style: .plain, target: self, action: #selector(markAsRead))
         self.navigationItem.leftBarButtonItem = markRead
         
-        self.collectionView.backgroundColor = UIColor.purple
+        super.collectionView.backgroundView = UIImageView(image: UIImage(named: "whatsapp_bg"))
         
     }
     
@@ -68,6 +68,8 @@ class DemoChatViewController: BaseChatViewController {
         let chatInputView = ChatInputBar.loadNib()
         var appearance = ChatInputBarAppearance()
         appearance.sendButtonAppearance.title = NSLocalizedString("Send", comment: "")
+        appearance.sendButtonAppearance.insets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
+        appearance.textInputAppearance.textInsets = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
         appearance.textInputAppearance.placeholderText = NSLocalizedString("Type a message", comment: "")
         self.chatInputPresenter = BasicChatInputBarPresenter(chatInputBar: chatInputView, chatInputItems: self.createChatInputItems(), chatInputBarAppearance: appearance)
         chatInputView.maxCharactersCount = 1000
@@ -115,16 +117,8 @@ class DemoChatViewController: BaseChatViewController {
 
         textMessagePresenter.textCellStyle = TextMessageCollectionViewCellDefaultStyle(bubbleImages: TextMessageCollectionViewCellDefaultStyle.createDefaultBubbleImages(), textStyle: textStyle, baseStyle: baseStyle)
         
-
-        let photoMessagePresenter = PhotoMessagePresenterBuilder(
-            viewModelBuilder: DemoPhotoMessageViewModelBuilder(),
-            interactionHandler: DemoPhotoMessageHandler(baseHandler: self.baseMessageHandler)
-        )
-        photoMessagePresenter.baseCellStyle = BaseMessageCollectionViewCellAvatarStyle()
-
         return [
             MessageType.TEXT.rawValue: [ textMessagePresenter ],
-            MessageType.PHOTO.rawValue: [ photoMessagePresenter ],
             TimeSeparatorModel.chatItemType: [TimeSeparatorPresenterBuilder()]
         ]
     }
@@ -132,7 +126,6 @@ class DemoChatViewController: BaseChatViewController {
     func createChatInputItems() -> [ChatInputItemProtocol] {
         var items = [ChatInputItemProtocol]()
         items.append(self.createTextInputItem())
-        items.append(self.createPhotoInputItem())
         return items
     }
 

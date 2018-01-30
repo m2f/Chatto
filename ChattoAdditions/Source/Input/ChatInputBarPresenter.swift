@@ -49,7 +49,6 @@ public class BasicChatInputBarPresenter: NSObject, ChatInputBarPresenter {
         super.init()
 
         self.chatInputBar.presenter = self
-        self.chatInputBar.inputItems = self.chatInputItems
         self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardDidChangeFrame), name: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(BasicChatInputBarPresenter.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)

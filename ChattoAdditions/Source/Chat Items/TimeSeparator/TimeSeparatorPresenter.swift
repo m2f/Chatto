@@ -76,6 +76,6 @@ open class TimeSeparatorPresenter: ChatItemPresenterProtocol {
     }
     
     public func heightForCell(maximumWidth width: CGFloat, decorationAttributes: ChatItemDecorationAttributesProtocol?) -> CGFloat {
-        return 24
+        return 34
     }
 }

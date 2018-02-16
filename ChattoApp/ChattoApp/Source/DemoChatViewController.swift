@@ -137,11 +137,11 @@ class DemoChatViewController: BaseChatViewController {
         return item
     }
 
-    private func createPhotoInputItem() -> PhotosChatInputItem {
-        let item = PhotosChatInputItem(presentingController: self)
-        item.photoInputHandler = { [weak self] image in
-            self?.dataSource.addPhotoMessage(image)
-        }
-        return item
-    }
+//    private func createPhotoInputItem() -> PhotosChatInputItem {
+//        let item = PhotosChatInputItem(presentingController: self)
+//        item.photoInputHandler = { [weak self] image in
+//            self?.dataSource.addPhotoMessage(image)
+//        }
+//        return item
+//    }
 }

@@ -104,7 +104,7 @@ open class ChatInputBar: ReusableXibView {
     public var maxCharactersCount: UInt? // nil -> unlimited
 
     private func updateIntrinsicContentSizeAnimated() {
-        let options: UIViewAnimationOptions = [.beginFromCurrentState, .allowUserInteraction]
+        let options: UIView.AnimationOptions = [.beginFromCurrentState, .allowUserInteraction]
         UIView.animate(withDuration: 0.25, delay: 0, options: options, animations: { () -> Void in
             self.invalidateIntrinsicContentSize()
             self.layoutIfNeeded()
@@ -178,7 +178,8 @@ extension ChatInputBar {
         self.textView.setTextPlaceholder(appearance.textInputAppearance.placeholderText)
         self.sendButton.contentEdgeInsets = appearance.sendButtonAppearance.insets
         self.sendButton.setTitle(appearance.sendButtonAppearance.title, for: .normal)
-        appearance.sendButtonAppearance.titleColors.forEach { (state, color) in
+        appearance.sendButtonAppearance.titleColors.forEach { (arg) in
+            let (state, color) = arg
             self.sendButton.setTitleColor(color, for: state.controlState)
         }
         self.sendButton.titleLabel?.font = appearance.sendButtonAppearance.font

@@ -26,7 +26,7 @@ import UIKit
 import Chatto
 
 open class TextMessageCollectionViewCellDefaultStyle: TextMessageCollectionViewCellStyleProtocol {
-    typealias Class = TextMessageCollectionViewCellDefaultStyle
+    public typealias Class = TextMessageCollectionViewCellDefaultStyle
 
     public struct BubbleImages {
         let incomingTail: () -> UIImage

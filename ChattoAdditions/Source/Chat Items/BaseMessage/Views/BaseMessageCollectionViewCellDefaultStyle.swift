@@ -26,7 +26,7 @@ import UIKit
 
 open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewCellStyleProtocol {
 
-    typealias Class = BaseMessageCollectionViewCellDefaultStyle
+    public typealias Class = BaseMessageCollectionViewCellDefaultStyle
 
     public struct Colors {
         let incoming: () -> UIColor
@@ -119,8 +119,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     private lazy var dateStringAttributes = {
         return [
-            NSAttributedStringKey.font : self.dateFont,
-            NSAttributedStringKey.foregroundColor: self.dateFontColor
+            NSAttributedString.Key.font : self.dateFont,
+            NSAttributedString.Key.foregroundColor: self.dateFontColor
         ]
     }()
 

@@ -77,10 +77,23 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
         self.view.backgroundColor = UIColor.white
     }
 
+    private func addBottomSpaceView() {
+        self.bottomSpaceView = UIView(frame: CGRect.zero)
+        self.bottomSpaceView.autoresizingMask = UIView.AutoresizingMask()
+        self.bottomSpaceView.translatesAutoresizingMaskIntoConstraints = false
+        self.bottomSpaceView.backgroundColor = UIColor.white
+        self.view.addSubview(self.bottomSpaceView)
+        self.view.addConstraint(NSLayoutConstraint(item: self.bottomSpaceView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self.inputContainer, attribute: .bottom, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .leading, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .leading, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .trailing, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .trailing, multiplier: 1, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.bottomSpaceView, attribute: .bottom, multiplier: 1, constant: 0))
+    }
+
     override open func viewDidLoad() {
         super.viewDidLoad()
         self.addCollectionView()
         self.addInputViews()
+        self.addBottomSpaceView()
         self.setupKeyboardTracker()
         self.setupTapGestureRecognizer()
     }
@@ -250,6 +263,7 @@ open class BaseChatViewController: UIViewController, UICollectionViewDataSource,
     var autoLoadingEnabled: Bool = false
     var accessoryViewRevealer: AccessoryViewRevealer!
     public private(set) var inputContainer: UIView!
+    public private(set) var bottomSpaceView: UIView!
     var presenterFactory: ChatItemPresenterFactoryProtocol!
     let presentersByCell = NSMapTable<UICollectionViewCell, AnyObject>(keyOptions: .weakMemory, valueOptions: .weakMemory)
     var visibleCells: [IndexPath: UICollectionViewCell] = [:] // @see visibleCellsAreValid(changes:)

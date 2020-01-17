@@ -61,7 +61,6 @@ class KeyboardTracker {
         self.inputContainer = inputContainer
         self.notificationCenter = notificationCenter
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         self.notificationCenter.addObserver(self, selector: #selector(KeyboardTracker.keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
@@ -141,6 +140,7 @@ class KeyboardTracker {
         if self.keyboardTrackerView.preferredSize.height != inputContainerHeight {
             self.keyboardTrackerView.preferredSize.height = inputContainerHeight
             self.isPerformingForcedLayout = true
+            self.inputContainer.layoutIfNeeded()
             self.keyboardTrackerView.window?.layoutIfNeeded()
             self.isPerformingForcedLayout = false
         }
